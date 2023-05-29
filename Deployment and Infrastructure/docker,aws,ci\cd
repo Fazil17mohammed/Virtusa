@@ -1,0 +1,33 @@
+# Use a Node.js base image
+FROM node:14-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the application port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]
+
+# Build the Docker image
+docker build -t hr1-app .
+
+# Tag the Docker image
+docker tag hr1-app your-dockerhub-username/hr1-app:latest
+
+# Push the Docker image
+docker push your-dockerhub-username/hr1-app:latest
+
+docker pull your-dockerhub-username/hr1-app:latest
+
+docker run -d -p 80:3000 --name hr1-container your-dockerhub-username/hr1-app:latest
