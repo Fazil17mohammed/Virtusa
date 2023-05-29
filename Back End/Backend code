@@ -1,0 +1,38 @@
+// server.js
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.get('/', (req, res) => {
+  res.send('Welcome to HR1 - Resource Tracking Platform');
+});
+
+app.get('/api/resources', (req, res) => {
+  // Logic to retrieve resource data from the database
+  const resources = [
+    {
+      name: 'John Doe',
+      college: 'ABC University',
+      joinDate: '2023-05-01',
+      project: 'Project A'
+    },
+    {
+      name: 'Jane Smith',
+      college: 'XYZ University',
+      joinDate: '2023-06-01',
+      project: 'Project B'
+    }
+  ];
+
+  res.json(resources);
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
