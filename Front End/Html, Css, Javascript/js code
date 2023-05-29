@@ -1,0 +1,22 @@
+// script.js
+window.addEventListener('DOMContentLoaded', function() {
+  // Fetch resource data from the backend API and populate the table
+  fetch('api/resources')
+    .then(response => response.json())
+    .then(data => {
+      const tableBody = document.querySelector('#resources-section tbody');
+      data.forEach(resource => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${resource.name}</td>
+          <td>${resource.college}</td>
+          <td>${resource.joinDate}</td>
+          <td>${resource.project}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching resource data:', error);
+    });
+});
