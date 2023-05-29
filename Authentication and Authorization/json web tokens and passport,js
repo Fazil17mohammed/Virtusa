@@ -1,0 +1,100 @@
+npm install passport passport-local passport-jwt jsonwebtoken bcrypt
+
+// server.js
+
+// ...
+
+const passport = require('passport');
+const passportJWT = require('passport-jwt');
+const LocalStrategy = require('passport-local').Strategy;
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+// Configure Passport.js local strategy
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+  },
+  async (email, password, done) => {
+    try {
+      // Find user in the database
+      const user = await User.findOne({ email });
+
+      // If user not found or password doesn't match, return error
+      if (!user || !bcrypt.compareSync(password, user.password)) {
+        return done(null, false, { message: 'Invalid email or password' });
+      }
+
+      // If user found and password matches, return user
+      return done(null, user);
+    } catch (error) {
+      return done(error);
+    }
+  }
+));
+
+// Configure Passport.js JWT strategy
+passport.use(new JWTStrategy({
+    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    secretOrKey: 'your_secret_key'
+  },
+  async (jwtPayload, done) => {
+    try {
+      // Find user in the database based on JWT payload
+      const user = await User.findById(jwtPayload.sub);
+
+      // If user not found, return error
+      if (!user) {
+        return done(null, false, { message: 'User not found' });
+      }
+
+      // If user found, return user
+      return done(null, user);
+    } catch (error) {
+      return done(error);
+    }
+  }
+));
+
+// server.js
+
+// ...
+
+// POST /api/auth/login - Authenticate user and generate JWT
+app.post('/api/auth/login', (req, res, next) => {
+  passport.authenticate('local', { session: false }, (err, user, info) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (!user) {
+      return res.status(401).json({ error: info.message });
+    }
+
+    // Generate JWT
+    const token = jwt.sign({ sub: user._id }, 'your_secret_key');
+    return res.json({ token });
+  })(req, res, next);
+});
+
+// ...
+
+// server.js
+
+// ...
+
+// GET /api/resources - Retrieve resources (protected route)
+app.get('/api/resources', passport.authenticate('jwt', { session: false }), (req, res) => {
+  // Only authenticated users can access this route
+  Resource.find()
+    .then((resources) => {
+      res.json(resources);
+    })
+    .catch((error) => {
+      console.error('Error fetching resources:', error);
+      res.status(500).json({ error: 'Server error' });
+    });
+});
+
+// ...
