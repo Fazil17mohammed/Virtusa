@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HR1 - Resource Tracking Platform</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>HR1 - Resource Tracking Platform</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Resources</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Reports</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="welcome-section">
+      <h2>Welcome to HR1</h2>
+      <p>Track and manage resources who join Virtusa as Campus/Off-Campus College recruits.</p>
+    </section>
+
+    <section id="resources-section">
+      <h2>Resources</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>College</th>
+            <th>Join Date</th>
+            <th>Project</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Populate resources dynamically using JavaScript -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 HR1 - Next Gen Resource Tracking Platform</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
